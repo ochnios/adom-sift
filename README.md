@@ -37,9 +37,9 @@ pip install -r requirements.txt
 
 ## How to run
 
-After installing just open one of the project notebooks and run cells
+After installing, open one of the project notebooks and run cells.
 
 ## Notebooks
 
-* `introduction.ipynb` - basic SIFT workflow: load image, detect keypoints, compute descriptors, and visualize results.
-* `experiments.ipynb` - our experiments **TODO**
+* `demo.ipynb` - demo of SIFT workflow: load image, extract keypoints & compute descriptors, find and visualize matches.
+* `experiments.ipynb` - experiments with SIFT
