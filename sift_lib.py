@@ -116,12 +116,21 @@ class SiftMatcher:
 
         return good_matches
 
-    def draw_matches(self, img1, kp1, img2, kp2, matches) -> np.ndarray:
-        """Rysuje linie łączące dopasowane punkty na obu obrazach."""
-        # Rysujemy tylko poprawne dopasowania (pomijamy pojedyncze punkty bez pary)
+    @staticmethod
+    def draw_matches(img1, kp1, img2, kp2, matches) -> np.ndarray:
+        """
+        Draws lines between matching feature points between 2 images.
+        :param img1: First image
+        :param kp1: Feature points of the first image
+        :param img2: Second image
+        :param kp2: Feature points of the second image
+        :param matches: Matching features
+        :return: Image stitch with matches
+        """
+
         result_image = cv2.drawMatches(
             img1, kp1, img2, kp2, matches, None,
-            matchColor=(0, 255, 0),  # Zielone linie dla matchy
+            matchColor=(0, 255, 0),
             singlePointColor=None,
             flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS
         )
