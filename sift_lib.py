@@ -1,14 +1,57 @@
+from enum import Enum
+
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
+from dataclasses import dataclass
+from typing import Optional, Dict, Any
+
+
+class SiftMatcherType(Enum):
+    BFMatcher = 1
+    FLANN = 2
+
+
+@dataclass
+class SiftConfig:
+    """Configuration parameters for SIFT matcher."""
+    matcher_type: SiftMatcherType = SiftMatcherType.BFMatcher
+    norm_type: int = cv2.NORM_L2  # cv2.NORM_L2 / cv2.NORM_L1
+    ratio_threshold: float = 0.75  # Lowe test threshold
+    cross_check: bool = False  # BFMatcher flag ( (wzajemnie najlepsze dopasowania)
+    flann_index_params: Optional[Dict[str, Any]] = None
+    flann_search_params: Optional[Dict[str, Any]] = None
+
+    def __post_init__(self):
+        """Initialize FLANN params."""
+        if self.matcher_type == SiftMatcherType.FLANN:
+            FLANN_INDEX_KDTREE = 1
+            if self.flann_index_params is None:
+                self.flann_index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+            if self.flann_search_params is None:
+                self.flann_search_params = dict(checks=50)
+
 
 class SiftMatcher:
 
-    def __init__(self, ratio_threshold: float = 0.75):
+    def __init__(self, config: SiftConfig = SiftConfig()):
         self.sift = cv2.SIFT_create()
+        self.config = config
         self.matcher = cv2.BFMatcher(cv2.NORM_L2)
-        self.ratio_threshold = ratio_threshold
+
+        if self.config.matcher_type == SiftMatcherType.BFMatcher:
+            self.matcher = cv2.BFMatcher(
+                normType=self.config.norm_type,
+                crossCheck=self.config.cross_check
+            )
+        elif self.config.matcher_type == SiftMatcherType.FLANN:
+            self.matcher = cv2.FlannBasedMatcher(
+                self.config.flann_index_params,
+                self.config.flann_search_params
+            )
+        else:
+            raise ValueError('Unknown SIFT matcher.')
 
     @staticmethod
     def load_image(path: str) -> np.ndarray:
@@ -54,18 +97,22 @@ class SiftMatcher:
 
     def find_matches(self, descriptors1: np.ndarray, descriptors2: np.ndarray) -> list:
         """
-        Znajduje najlepsze dopasowania używając algorytmu k-Nearest Neighbors (k=2)
-        oraz filtruje je za pomocą Lowe's Ratio Test.
+        Discovers best feature matches using configured matcher.
+        :param descriptors1: Descriptors of the first image features
+        :param descriptors2: Descriptors of the second image features
+        :return: Matching feature points
         """
-        # Znajdujemy 2 najbliższe dopasowania dla każdego deskryptora
-        raw_matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
+        if self.config.matcher_type == SiftMatcherType.BFMatcher and self.config.cross_check:
+            raw_matches = self.matcher.match(descriptors1, descriptors2)
+            good_matches = sorted(raw_matches, key=lambda x: x.distance)
+        else:
+            # KNN + Lowe test
+            raw_matches = self.matcher.knnMatch(descriptors1, descriptors2, k=2)
+            good_matches = []
 
-        good_matches = []
-        for m, n in raw_matches:
-            # Lowe's Ratio Test: upewniamy się, że najlepsze dopasowanie (m)
-            # jest znacznie lepsze niż drugie w kolejności (n).
-            if m.distance < self.ratio_threshold * n.distance:
-                good_matches.append(m)
+            for m, n in raw_matches:
+                if m.distance < self.config.ratio_threshold * n.distance:
+                    good_matches.append(m)
 
         return good_matches
 
