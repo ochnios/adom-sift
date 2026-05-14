@@ -90,7 +90,7 @@ class SiftMatcher:
             image,
             keypoints,
             None,
-            color=(0, 0, 255),  # Yellow circles for visibility
+            color=(0, 0, 255),
             flags=flag
         )
         return result_image
