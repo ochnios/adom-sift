@@ -11,7 +11,7 @@ Projekt ma na celu zaprezentowanie algorytmu SIFT oraz eksperymentów na nim prz
 
 ## Zawartość repozytorium
 
-* `demo/demo.ipynb` - główna prezentacja algo własnej biblioteki pomocniczej (`sift_lib.py`) oraz demonstracja dopasowania obrazów i podsumowanie wniosków z eksperymentów.
+* `demo/demo.ipynb` - główna prezentacja algorytmu: wstęp teoretyczny, wizualizacja kolejnych etapów, opis własnej biblioteki pomocniczej, demonstracja dopasowania obrazów i podsumowanie wniosków z eksperymentów.
 * `experiments/experiments<1-4>.ipynb` - eksperymenty na czterech różnych zestawach danych dla trzech konfiguracje parametrów SIFT (baseline, wysoka czułość, optymalizacja szybkości): dopasowanie par obrazów, niezmienniczość na obrót i skalę, estymacja homografii (RANSAC) oraz porównanie SIFT z ORB.
 
 ## Konfiguracja środowiska
