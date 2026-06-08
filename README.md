@@ -1,20 +1,30 @@
-# adom-sift
+# Scale-Invariant Feature Transform (SIFT)
 
-This is a project for conducting experiments with OpenCV SIFT (Scale-Invariant Feature Transform) algorithm.
+Projekt ma na celu zaprezentowanie algorytmu SIFT oraz eksperymentów na nim przeprowadzonych na potrzeby przedmiotu `Analiza Danych Obrazowych i Multimedialnych` w semestrze `2026L`.
 
-SIFT paper: [Distinctive Image Features from Scale-Invariant Keypoints](https://link.springer.com/content/pdf/10.1023/B:VISI.0000029664.99615.94.pdf)
+## Zespół
 
-## Environment setup
+* Cong Minh Vu
+* Mateusz Szulc
+* Szymon Ochnio
+* Mateusz Kwiatkowski
 
-Required Python version: 3.12+
+## Zawartość repozytorium
 
-1. Create virtual environment
+* `demo/demo.ipynb` - główna prezentacja algo własnej biblioteki pomocniczej (`sift_lib.py`) oraz demonstracja dopasowania obrazów i podsumowanie wniosków z eksperymentów.
+* `experiments/experiments<1-4>.ipynb` - eksperymenty na czterech różnych zestawach danych dla trzech konfiguracje parametrów SIFT (baseline, wysoka czułość, optymalizacja szybkości): dopasowanie par obrazów, niezmienniczość na obrót i skalę, estymacja homografii (RANSAC) oraz porównanie SIFT z ORB.
+
+## Konfiguracja środowiska
+
+Wymagana wersja Pythona: 3.12+
+
+### 1. Utwórz wirtualne środowisko
 
 ```bash
 python -m venv .venv
 ```
 
-2. Activate virtual environment
+### 2. Aktywuj wirtualne środowisko
 
 Windows (PowerShell):
 
@@ -28,18 +38,13 @@ Linux/macOS:
 source .venv/bin/activate
 ```
 
-3. Install dependencies
+### 3. Zainstaluj zależności
 
 ```bash
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-## How to run
+## Uruchomienie
 
-After installing, open one of the project notebooks and run cells.
-
-## Notebooks
-
-* `demo.ipynb` - demo of SIFT workflow: load image, extract keypoints & compute descriptors, find and visualize matches.
-* `experiments.ipynb` - experiments with SIFT
+Po instalacji otwórz jeden z notebooków projektu i uruchom komórki lub przeglądaj zapisane już wyniki.
